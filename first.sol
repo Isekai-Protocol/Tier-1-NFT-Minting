@@ -1435,10 +1435,11 @@ contract FirstNft is ERC721, Ownable, MerkleProof {
         require(msg.value >= isSale[tokenId], "token is not enough");
         isSale[tokenId] = 0;
         safeTransferFrom(from, to, tokenId, "");
+        //版税相关 先注释
         //给nft创建者10%
-        royalties[tokenCreateAddress[tokenId]] += 10 * msg.value /100;
+        //royalties[tokenCreateAddress[tokenId]] += 10 * msg.value /100;
         //给nft拥有者1
-        royalties[ownerOf(tokenId)] += 84 * msg.value / 100;
+        //royalties[ownerOf(tokenId)] += 84 * msg.value / 100;
     }
     // 设置tokenid的状态 为 可以出售
     function startSale(uint256 tokenId, uint256 price) public {
