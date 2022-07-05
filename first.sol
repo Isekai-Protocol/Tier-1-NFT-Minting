@@ -1419,6 +1419,7 @@ contract FirstNft is ERC721, Ownable, MerkleProof {
         tokenCreateAddress[supply] = msg.sender;
         _mint(recipient, supply);
         _tokenIds.increment();
+        _tokenURIs[supply] = uri;
         return supply;
     }
 
