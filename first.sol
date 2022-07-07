@@ -1262,7 +1262,7 @@ contract FirstNft is ERC721, Ownable, MerkleProof {
 //    // 盲盒未开时的url
 //    string public notRevealedUri;
     // 单个nft铸造的最低花费
-    uint256 public minCost = 1 ether;
+    uint256 public minCost = 0.00001 ether;
     // 允许铸造的nft最大数量
     uint256 public maxSupply = 10000;
     // 一次铸币允许的最大数量
@@ -1407,8 +1407,8 @@ contract FirstNft is ERC721, Ownable, MerkleProof {
             uint256 ownerMintedCount = balanceOf(msg.sender);
             //判断个人账户铸币后  持有nft总数是否超过限制
             require(ownerMintedCount + 1 <= nftPerAddressLimit, "max NFT per address exceeded");
-            // 判断个人账户余额是否足够
-            require(msg.value >= minCost * 1, "insufficient funds");
+            // 判断个人账户余额是否足够 未确定 先注释
+//            require(msg.value >= minCost * 1, "insufficient funds");
         }
         //如果设置了当前只能盲盒铸造 默认为盲盒url  盲盒这部分没想好怎么做
         //        _setTokenURI(supply, uri);
@@ -1433,6 +1433,7 @@ contract FirstNft is ERC721, Ownable, MerkleProof {
         require(from != address(0), "from is the zero address");
         require(to != address(0), "to is the zero address");
         require(isSale[tokenId] > 0, "token is not sell");
+        //update
         require(msg.value >= isSale[tokenId], "token is not enough");
         isSale[tokenId] = 0;
         safeTransferFrom(from, to, tokenId, "");
