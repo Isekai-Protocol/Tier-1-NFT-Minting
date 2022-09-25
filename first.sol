@@ -1,45 +1,26 @@
 /**
- *Submitted for verification at polygonscan.com on 2021-12-05
+ *Submitted for verification at polygonscan.com on 2022-09-22
 */
 
 // SPDX-License-Identifier: MIT
-// File: @openzeppelin/contracts/utils/Counters.sol
-
-
-// OpenZeppelin Contracts v4.4.0 (utils/Counters.sol)
-
 pragma solidity ^0.8.0;
 
-/**
- * @title Counters
- * @author Matt Condon (@shrugs)
- * @dev Provides counters that can only be incremented, decremented or reset. This can be used e.g. to track the number
- * of elements in a mapping, issuing ERC721 ids, or counting request ids.
- * 提供只能递增、递减或重置的计数器。 这可以用于跟踪映射中的元素数量，发出ERC721 id，或者计算请求id。
- * Include with `using Counters for Counters.Counter;`
- */
-// 计数器
 library Counters {
-    //初始化 默认从0开始
     struct Counter {
-        // This variable should never be directly accessed by users of the library: interactions must be restricted to
-        // the library's function. As of Solidity v0.5.2, this cannot be enforced, though there is a proposal to add
-        // this feature: see https://github.com/ethereum/solidity/issues/4637
-        //这个变量不应该被库的用户直接访问:交互必须限制在库的函数中。 在Solidity v0.5.2版本中，这是不能强制执行的，
-        //尽管有建议添加此特性:参见https://github.com/ethereum/solidity/issues/4637
+
         uint256 _value; // default: 0
     }
-    // 获取当前的值
+
     function current(Counter storage counter) internal view returns (uint256) {
         return counter._value;
     }
-    // 计数器自增1
+
     function increment(Counter storage counter) internal {
     unchecked {
         counter._value += 1;
     }
     }
-    // 计数器减一 需要当前值大于0
+
     function decrement(Counter storage counter) internal {
         uint256 value = counter._value;
         require(value > 0, "Counter: decrement overflow");
@@ -47,7 +28,7 @@ library Counters {
         counter._value = value - 1;
     }
     }
-    // 重置计数器为0
+
     function reset(Counter storage counter) internal {
         counter._value = 0;
     }
@@ -63,14 +44,13 @@ pragma solidity ^0.8.0;
 /**
  * @dev String operations.
  */
-// OpenZeppelin上的string处理工具
 library Strings {
     bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
 
     /**
      * @dev Converts a `uint256` to its ASCII `string` decimal representation.
      */
-    // uint256 to ASCII `string` 结果为10进制
+  
     function toString(uint256 value) internal pure returns (string memory) {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
@@ -84,10 +64,9 @@ library Strings {
             digits++;
             temp /= 10;
         }
-        //创建一个相同数位大小的bytes字符数组
+
         bytes memory buffer = new bytes(digits);
-        //循环，倒序保存字符到字符空间buffer
-        //bytes1(uint8(48 + temp % 10))  EG：value 是52的话，结果是0x32 十六进制
+
         while (value != 0) {
             digits -= 1;
             buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
@@ -99,7 +78,7 @@ library Strings {
     /**
      * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.
      */
-    //同上 结果为16进制
+
     function toHexString(uint256 value) internal pure returns (string memory) {
         if (value == 0) {
             return "0x00";
@@ -116,7 +95,6 @@ library Strings {
     /**
      * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
      */
-    // 固定程度16进制
     function toHexString(uint256 value, uint256 length) internal pure returns (string memory) {
         bytes memory buffer = new bytes(2 * length + 2);
         buffer[0] = "0";
@@ -147,7 +125,6 @@ pragma solidity ^0.8.0;
  *
  * This contract is only required for intermediate, library-like contracts.
  */
-//　抽象合约，上下文；主要对 msg对象做一些封装；例如： msg.Sender代表当前调用合约的用户
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
@@ -178,7 +155,7 @@ pragma solidity ^0.8.0;
  * `onlyOwner`, which can be applied to your functions to restrict their use to
  * the owner.
  */
-// 合约相关功能
+
 abstract contract Ownable is Context {
     address private _owner;
 
@@ -187,7 +164,6 @@ abstract contract Ownable is Context {
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
      */
-    // 初始化 合约 创建者
     constructor() {
         _transferOwnership(_msgSender());
     }
@@ -195,7 +171,7 @@ abstract contract Ownable is Context {
     /**
      * @dev Returns the address of the current owner.
      */
-    // 返回合约拥有者
+
     function owner() public view virtual returns (address) {
         return _owner;
     }
@@ -203,7 +179,6 @@ abstract contract Ownable is Context {
     /**
      * @dev Throws if called by any account other than the owner.
      */
-    // 函数修饰符 判断是否为合约拥有者
     modifier onlyOwner() {
         require(owner() == _msgSender(), "Ownable: caller is not the owner");
         _;
@@ -216,7 +191,6 @@ abstract contract Ownable is Context {
      * NOTE: Renouncing ownership will leave the contract without an owner,
      * thereby removing any functionality that is only available to the owner.
      */
-    //放弃 权限 到0x0000000000000000000000000000000000000000
     function renounceOwnership() public virtual onlyOwner {
         _transferOwnership(address(0));
     }
@@ -225,7 +199,6 @@ abstract contract Ownable is Context {
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Can only be called by the current owner.
      */
-    //转移权限到新地址
     function transferOwnership(address newOwner) public virtual onlyOwner {
         require(newOwner != address(0), "Ownable: new owner is the zero address");
         _transferOwnership(newOwner);
@@ -235,7 +208,6 @@ abstract contract Ownable is Context {
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Internal function without access restriction.
      */
-    // 转移合同所有权
     function _transferOwnership(address newOwner) internal virtual {
         address oldOwner = _owner;
         _owner = newOwner;
@@ -253,7 +225,6 @@ pragma solidity ^0.8.0;
 /**
  * @dev Collection of functions related to the address type
  */
-// 地址处理工具
 library Address {
     /**
      * @dev Returns true if `account` is a contract.
@@ -272,7 +243,6 @@ library Address {
      *  - an address where a contract lived, but was destroyed
      * ====
      */
-    // 判断地址是否 为 合约地址
     function isContract(address account) internal view returns (bool) {
         // This method relies on extcodesize, which returns 0 for contracts in
         // construction, since the code is only stored at the end of the
@@ -301,7 +271,6 @@ library Address {
      * {ReentrancyGuard} or the
      * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
      */
-    // 给recipient 转账
     function sendValue(address payable recipient, uint256 amount) internal {
         require(address(this).balance >= amount, "Address: insufficient balance");
 
@@ -478,7 +447,6 @@ pragma solidity ^0.8.0;
  * @dev Interface for any contract that wants to support safeTransfers
  * from ERC721 asset contracts.
  */
-// NFT的转移时，如果 _to 是一个合约的话，那么其必须实现 IERC721Receiver接口才可以接收
 interface IERC721Receiver {
     /**
      * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
@@ -513,7 +481,6 @@ pragma solidity ^0.8.0;
  *
  * For an implementation, see {ERC165}.
  */
-// 要求合约提供其实现了哪些接口；在与合约进行交互的时候可以先调用此接口进行查询，了解合约具体实现了哪些接口
 interface IERC165 {
     /**
      * @dev Returns true if this contract implements the interface defined by
@@ -548,7 +515,6 @@ pragma solidity ^0.8.0;
  *
  * Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.
  */
-//抽象合约，官方对 IERC165 提供的默认实现
 abstract contract ERC165 is IERC165 {
     /**
      * @dev See {IERC165-supportsInterface}.
@@ -569,7 +535,6 @@ pragma solidity ^0.8.0;
 /**
  * @dev Required interface of an ERC721 compliant contract.
  */
-// 发行 NFT 的标准合约规范；定义了 NFT 合约的各类行为接口，诸如：转移、授权
 interface IERC721 is IERC165 {
     /**
      * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
@@ -716,7 +681,6 @@ pragma solidity ^0.8.0;
  * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
  * @dev See https://eips.ethereum.org/EIPS/eip-721
  */
-// 定义合约的元数据信息；诸如：合约名字、标志、以及每个代币的 tokenURI
 interface IERC721Metadata is IERC721 {
     /**
      * @dev Returns the token collection name.
@@ -753,30 +717,23 @@ pragma solidity ^0.8.0;
  * the Metadata extension, but not including the Enumerable extension, which is available separately as
  * {ERC721Enumerable}.
  */
-//官方对 IERC721 提供的默认实现
 contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
-    // // Address和Strings可理解为工具类，这里是为了安全 or 操作便捷考虑
     using Address for address;
     using Strings for uint256;
 
     // Token name
-    // 合约名字 for IERC721Metadata 中的定义
     string private _name;
 
     // Token symbol
-    // 合约标志 for IERC721Metadata 中的定义
     string private _symbol;
 
     // Mapping from token ID to owner address
-    // key为tokenID，value为该tokenID对应的owner地址
     mapping(uint256 => address) private _owners;
 
     // Mapping owner address to token count
-    // key为用户地址，value为该地址拥有的token数量
     mapping(address => uint256) private _balances;
 
     // Mapping from token ID to approved address
-    // key为代币ID，value为代币所授权地址（一个token只能授予一个账号行使权）
     mapping(uint256 => address) private _tokenApprovals;
 
     // Mapping from owner to operator approvals
@@ -786,7 +743,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
      */
-    // 初始化
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
@@ -795,7 +751,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    // 判断interfaceId 是否已经实现
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
         return
         interfaceId == type(IERC721).interfaceId ||
@@ -806,7 +761,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-balanceOf}.
      */
-    // 查余额
     function balanceOf(address owner) public view virtual override returns (uint256) {
         require(owner != address(0), "ERC721: balance query for the zero address");
         return _balances[owner];
@@ -815,7 +769,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-ownerOf}.
      */
-    // 根据tokenid查拥有者地址
     function ownerOf(uint256 tokenId) public view virtual override returns (address) {
         address owner = _owners[tokenId];
         require(owner != address(0), "ERC721: owner query for nonexistent token");
@@ -825,7 +778,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721Metadata-name}.
      */
-    //查合约名
     function name() public view virtual override returns (string memory) {
         return _name;
     }
@@ -833,7 +785,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721Metadata-symbol}.
      */
-    // 查合约标识
     function symbol() public view virtual override returns (string memory) {
         return _symbol;
     }
@@ -841,8 +792,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-    // 查 tokenID代币对应的 tokenURI
-    // ?
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
@@ -862,7 +811,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-approve}.
      */
-    // tokenid授权给其他地址
     function approve(address to, uint256 tokenId) public virtual override {
         address owner = ERC721.ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
@@ -878,7 +826,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-getApproved}.
      */
-    // 获取代币tokenID的被授权用户地址
     function getApproved(uint256 tokenId) public view virtual override returns (address) {
         require(_exists(tokenId), "ERC721: approved query for nonexistent token");
 
@@ -888,7 +835,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-setApprovalForAll}.
      */
-    // 函数调用者msgSender()将自己所有的代币的行使权(授予或者回收)operator账号
     function setApprovalForAll(address operator, bool approved) public virtual override {
         _setApprovalForAll(_msgSender(), operator, approved);
     }
@@ -896,7 +842,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-isApprovedForAll}.
      */
-    // 判断owner是否对某地址授权
     function isApprovedForAll(address owner, address operator) public view virtual override returns (bool) {
         return _operatorApprovals[owner][operator];
     }
@@ -904,7 +849,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-transferFrom}.
      */
-    // 交易 将tokenID从from账号转移到to账号
     function transferFrom(
         address from,
         address to,
@@ -919,7 +863,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-safeTransferFrom}.
      */
-    // 安全代币转移
     function safeTransferFrom(
         address from,
         address to,
@@ -931,7 +874,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     /**
      * @dev See {IERC721-safeTransferFrom}.
      */
-    // 安全转移函数，携带回调数据 _data
     function safeTransferFrom(
         address from,
         address to,
@@ -967,7 +909,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         bytes memory _data
     ) internal virtual {
         _transfer(from, to, tokenId);
-        // 安全的由来：代币接收者如果是一个合约，那么其必须要实现IERC721Receiver规范，否则转移失败
         require(_checkOnERC721Received(from, to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
     }
 
@@ -979,7 +920,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      * Tokens start existing when they are minted (`_mint`),
      * and stop existing when they are burned (`_burn`).
      */
-    // 内部函数，判断代币是否存在
     function _exists(uint256 tokenId) internal view virtual returns (bool) {
         return _owners[tokenId] != address(0);
     }
@@ -991,7 +931,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * - `tokenId` must exist.
      */
-    // 断地址是否为代币的owner或者是拥有代币行使权的账号
     function _isApprovedOrOwner(address spender, uint256 tokenId) internal view virtual returns (bool) {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
         address owner = ERC721.ownerOf(tokenId);
@@ -1008,7 +947,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * Emits a {Transfer} event.
      */
-    // 安全铸造NFT
     function _safeMint(address to, uint256 tokenId) internal virtual {
         _safeMint(to, tokenId, "");
     }
@@ -1042,11 +980,8 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      * Emits a {Transfer} event.
      */
     function _mint(address to, uint256 tokenId) internal virtual {
-        //检查接收地址是否存在
         require(to != address(0), "ERC721: mint to the zero address");
-        //判断tokenid是否已经被铸造
         require(!_exists(tokenId), "ERC721: token already minted");
-        // 代币转移前触发
         _beforeTokenTransfer(address(0), to, tokenId);
 
         _balances[to] += 1;
@@ -1065,21 +1000,13 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * Emits a {Transfer} event.
      */
-    // 代币销毁
-    //
     function _burn(uint256 tokenId) internal virtual {
         address owner = ERC721.ownerOf(tokenId);
-        // 代币转移前触发
         _beforeTokenTransfer(owner, address(0), tokenId);
 
-        // Clear approvals
-        // 清除授权
         _approve(address(0), tokenId);
-        // 用户代币数-1
         _balances[owner] -= 1;
-        // 清理代币
         delete _owners[tokenId];
-        // 触发代币转移事件，代币的接受者为零地址，说明是销毁
         emit Transfer(owner, address(0), tokenId);
     }
 
@@ -1094,29 +1021,19 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * Emits a {Transfer} event.
      */
-    // 交易过程
     function _transfer(
         address from,
         address to,
         uint256 tokenId
     ) internal virtual {
-        //判断是否是该tokenid的所有者
         require(ERC721.ownerOf(tokenId) == from, "ERC721: transfer of token that is not own");
-        //判断接收地址是否存在
         require(to != address(0), "ERC721: transfer to the zero address");
-        // 代币转移前触发，官方实现无做实际操作，如果业务有特殊的逻辑,可重写
         _beforeTokenTransfer(from, to, tokenId);
 
-        // Clear approvals from the previous owner
-        // 清除之前的授权—————指向零地址
         _approve(address(0), tokenId);
-        //from账号代币数 -1
         _balances[from] -= 1;
-        // to账号代币数 +1
         _balances[to] += 1;
-        //执行代币的转移，更换owner地址
         _owners[tokenId] = to;
-        //触发转移事件
         emit Transfer(from, to, tokenId);
     }
 
@@ -1125,7 +1042,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * Emits a {Approval} event.
      */
-    // 授予to账号tokenID的行使权，并触发授权事件
     function _approve(address to, uint256 tokenId) internal virtual {
         _tokenApprovals[tokenId] = to;
         emit Approval(ERC721.ownerOf(tokenId), to, tokenId);
@@ -1136,7 +1052,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * Emits a {ApprovalForAll} event.
      */
-    // owner授予/回收operator对自己所有代币的权限
     function _setApprovalForAll(
         address owner,
         address operator,
@@ -1157,8 +1072,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      * @param _data bytes optional data to send along with the call
      * @return bool whether the call correctly returned the expected magic value
      */
-    // 内部方法：判断代币接收者是否是合约，并且是否实现了 IERC721Receiver 接口
-    // 如果代币的接受者是一个合约的话，那么合约需要实现 IERC721Receiver 接口
     function _checkOnERC721Received(
         address from,
         address to,
@@ -1202,7 +1115,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         uint256 tokenId
     ) internal virtual {}
 }
-//默克尔树
 pragma solidity ^0.8.0;
 contract MerkleProof {
     function verify(
@@ -1237,138 +1149,223 @@ contract MerkleProof {
 }
 
 
-
-
-// File: NFTMinter.sol
-
-
+interface IERC2981 is IERC165 {
+    /**
+     * @dev Returns how much royalty is owed and to whom, based on a sale price that may be denominated in any unit of
+     * exchange. The royalty amount is denominated and should be paid in that same unit of exchange.
+     */
+    function royaltyInfo(uint256 tokenId, uint256 salePrice)
+        external
+        view
+        returns (address receiver, uint256 royaltyAmount);
+}
 
 pragma solidity ^0.8.0;
 
 
+/**
+ * @dev Implementation of the NFT Royalty Standard, a standardized way to retrieve royalty payment information.
+ *
+ * Royalty information can be specified globally for all token ids via {_setDefaultRoyalty}, and/or individually for
+ * specific token ids via {_setTokenRoyalty}. The latter takes precedence over the first.
+ *
+ * Royalty is specified as a fraction of sale price. {_feeDenominator} is overridable but defaults to 10000, meaning the
+ * fee is specified in basis points by default.
+ *
+ * IMPORTANT: ERC-2981 only specifies a way to signal royalty information and does not enforce its payment. See
+ * https://eips.ethereum.org/EIPS/eip-2981#optional-royalty-payments[Rationale] in the EIP. Marketplaces are expected to
+ * voluntarily pay royalties together with sales, but note that this standard is not yet widely supported.
+ *
+ * _Available since v4.5._
+ */
+abstract contract ERC2981 is IERC2981, ERC165 {
+    struct RoyaltyInfo {
+        address receiver;
+        uint96 royaltyFraction;
+    }
+
+    RoyaltyInfo private _defaultRoyaltyInfo;
+    mapping(uint256 => RoyaltyInfo) private _tokenRoyaltyInfo;
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC165) returns (bool) {
+        return interfaceId == type(IERC2981).interfaceId || super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @inheritdoc IERC2981
+     */
+    function royaltyInfo(uint256 _tokenId, uint256 _salePrice) public view virtual override returns (address, uint256) {
+        RoyaltyInfo memory royalty = _tokenRoyaltyInfo[_tokenId];
+
+        if (royalty.receiver == address(0)) {
+            royalty = _defaultRoyaltyInfo;
+        }
+
+        uint256 royaltyAmount = (_salePrice * royalty.royaltyFraction) / _feeDenominator();
+
+        return (royalty.receiver, royaltyAmount);
+    }
+
+    /**
+     * @dev The denominator with which to interpret the fee set in {_setTokenRoyalty} and {_setDefaultRoyalty} as a
+     * fraction of the sale price. Defaults to 10000 so fees are expressed in basis points, but may be customized by an
+     * override.
+     */
+    function _feeDenominator() internal pure virtual returns (uint96) {
+        return 10000;
+    }
+
+    /**
+     * @dev Sets the royalty information that all ids in this contract will default to.
+     *
+     * Requirements:
+     *
+     * - `receiver` cannot be the zero address.
+     * - `feeNumerator` cannot be greater than the fee denominator.
+     */
+    function _setDefaultRoyalty(address receiver, uint96 feeNumerator) internal virtual {
+        require(feeNumerator <= _feeDenominator(), "ERC2981: royalty fee will exceed salePrice");
+        require(receiver != address(0), "ERC2981: invalid receiver");
+
+        _defaultRoyaltyInfo = RoyaltyInfo(receiver, feeNumerator);
+    }
+
+    /**
+     * @dev Removes default royalty information.
+     */
+    function _deleteDefaultRoyalty() internal virtual {
+        delete _defaultRoyaltyInfo;
+    }
+
+    function _setTokenRoyalty(
+        uint256 tokenId,
+        address receiver,
+        uint96 feeNumerator
+    ) internal virtual {
+        require(feeNumerator <= _feeDenominator(), "ERC2981: royalty fee will exceed salePrice");
+        require(receiver != address(0), "ERC2981: Invalid parameters");
+
+        _tokenRoyaltyInfo[tokenId] = RoyaltyInfo(receiver, feeNumerator);
+    }
+
+    /**
+     * @dev Resets royalty information for the token id back to the global default.
+     */
+    function _resetTokenRoyalty(uint256 tokenId) internal virtual {
+        delete _tokenRoyaltyInfo[tokenId];
+    }
+}
 
 
-contract FirstNft is ERC721, Ownable, MerkleProof {
+pragma solidity ^0.8.0;
+
+contract FirstNft is ERC721, ERC2981, Ownable, MerkleProof  {
     using Counters for Counters.Counter;
     using Strings for uint256;
-    // 计数器
     Counters.Counter _tokenIds;
-    // 记录tokenid对应的nft url
     mapping(uint256 => string) _tokenURIs;
-    // 白名单root根hash
     bytes32 root;
-//    // 盲盒baseurl
-//    string public baseURI;
-//    // 盲盒未开时的url
-//    string public notRevealedUri;
-    // 单个nft铸造的最低花费
-    uint256 public minCost = 0.00001 ether;
-    // 允许铸造的nft最大数量
+    string public baseURI;
+    string public notRevealedUri;
+    uint256 public minCost = 10;
     uint256 public maxSupply = 10000;
-    // 一次铸币允许的最大数量
-    uint256 public maxMintAmount = 1;
-    // 每个地址 持有的最大nft数量
     uint256 public nftPerAddressLimit = 3;
-    // 当前是否允许铸币
     bool public paused = false;
-//    // 当前盲盒是否开启
-//    bool public revealed = false;
-    // 当前是否启用了白名单
     bool public onlyWhitelisted = true;
-
-    // 1级nft创建者地址
     mapping(uint256 => address) tokenCreateAddress;
-    // 当前nft是否出售
-    mapping(uint256 => uint256) isSale;
-
     mapping(address => uint256) royalties;
+    address proxyTransferContract;
     struct RenderToken {
         uint256 id;
         string uri;
     }
 
-    // 初始化
     constructor(
         string memory _name,
-        string memory _symbol
-//        string memory _initBaseURI,
-//        string memory _initNotRevealedUri
+        string memory _symbol,
+        string memory _initBaseURI,
+        string memory _initNotRevealedUri
     ) ERC721(_name, _symbol) {
-        // 盲盒bsae url
-//        setBaseURI(_initBaseURI);
-        // 盲盒未开盒的url
-//        setNotRevealedURI(_initNotRevealedUri);
+        setBaseURI(_initBaseURI);
+        setNotRevealedURI(_initNotRevealedUri);
     }
 
-    //    // internal  盲盒地址图片 前缀
-    //    function _baseURI() internal view virtual override returns (string memory) {
-    //        return baseURI;
-    //    }
-    // 设置盲盒base url
-//    function setBaseURI(string memory _newBaseURI) public onlyOwner {
-//        baseURI = _newBaseURI;
-//    }
-    // 设置盲盒未开盒的url
-//    function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
-//        notRevealedUri = _notRevealedURI;
-//    }
-    // 设置tokenid对应的url
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC2981) returns (bool) {
+        return  interfaceId == type(IERC721).interfaceId ||
+                   interfaceId == type(IERC721Metadata).interfaceId ||
+                   super.supportsInterface(interfaceId);
+    }
+
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public virtual onlyOwner{
+        require(feeNumerator <= 1000 && feeNumerator >= 0, "between 1000 and 0");
+        _setDefaultRoyalty(receiver, feeNumerator);
+    }
+
+    function deleteDefaultRoyalty() public virtual onlyOwner{
+        _deleteDefaultRoyalty;
+    }
+
+    function setTokenRoyalty(
+        uint256 tokenId,
+        address receiver,
+        uint96 feeNumerator
+    ) public virtual {
+        require(feeNumerator <= 1000 && feeNumerator >= 0, "between 1000 and 0");
+        require(tokenCreateAddress[tokenId] == msg.sender, "not owner");
+        _setTokenRoyalty(tokenId, receiver, feeNumerator);
+    }
+
+    function resetTokenRoyalty(uint256 tokenId) public virtual {
+        require(tokenCreateAddress[tokenId] == msg.sender, "not owner");
+        _resetTokenRoyalty(tokenId);
+    }
+
+    function setBaseURI(string memory _newBaseURI) public onlyOwner {
+        baseURI = _newBaseURI;
+    }
+    function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
+        notRevealedUri = _notRevealedURI;
+    }
     function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal {
         _tokenURIs[tokenId] = _tokenURI;
     }
-    // 设置当前是否允许铸币
     function pause(bool _state) public onlyOwner {
         paused = _state;
     }
-    // 设置当前是否启用白名单
     function setOnlyWhitelisted(bool _state) public onlyOwner {
         onlyWhitelisted = _state;
     }
-    // 设置默克尔树 根
     function setMerkleRoot(bytes32 _root) public onlyOwner {
         root = _root;
     }
-    // 设置单个铸币 的最小花费
     function setMinCost(uint256 _minCost) public onlyOwner {
         minCost = _minCost;
     }
-    // 设置nft允许铸造的数量
     function setMaxSupply(uint256 _maxSupply) public onlyOwner {
         maxSupply = _maxSupply;
     }
-    // 设置一次铸币允许的最大数量
-    function setMaxMintAmount(uint256 _maxMintAmount) public onlyOwner {
-        maxMintAmount = _maxMintAmount;
-    }
-    // 设置每个地址允许持有的最大nft数量
+
     function setNftPerAddressLimit(uint256 _nftPerAddressLimit) public onlyOwner {
         nftPerAddressLimit = _nftPerAddressLimit;
     }
-//    // 设置盲盒的状态 是否开启
-//    function setRevealed(bool _state) public onlyOwner {
-//        revealed = _state;
-//    }
-    // 根据tokenid获取tokenurl
+    function setProxyAddress(address proxyAddress) public onlyOwner {
+        proxyTransferContract = proxyAddress;
+    }
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         require(_exists(tokenId), "operator query for nonexistent token");
         string memory _tokenURI = _tokenURIs[tokenId];
         return _tokenURI;
     }
-    // 判断tokenid是否存在
     function tokenIdExist(uint256 tokenId) public view virtual returns (bool) {
         return _exists(tokenId);
     }
-    // 根据tokenid查询nft拥有者地址
-    // function getTokenOwnAddress(uint256 tokenId) public view virtual returns (address) {
-    //     require(_exists(tokenId), "operator query for nonexistent token");
-    //     return tokenOwnAddress[tokenId];
-    // }
-    // 根据tokenid查询nft创建者地址
     function getTokenCreateAddress(uint256 tokenId) public view virtual returns (address) {
         require(_exists(tokenId), "operator query for nonexistent token");
         return tokenCreateAddress[tokenId];
     }
-    //获取所有的tokenid和token url
     function getAllTokens() public view returns (RenderToken[] memory) {
         uint256 lastestId = _tokenIds.current();
         uint256 counter = 0;
@@ -1384,77 +1381,49 @@ contract FirstNft is ERC721, Ownable, MerkleProof {
     }
 
     function mintNFT(address recipient, string memory uri, bytes32[] memory proof) public payable returns (uint256) {
-        // 控制当前合约是否可以mint
+
         require(!paused, "the contract is paused");
-        //当前nft总数
+
         uint256 supply = _tokenIds.current();
-        //        //铸币数 至少为1
-        //        require(_mintAmount > 0, "need to mint at least 1 NFT");
-        //        //每次铸币有最大次数限制
-        //        require(_mintAmount <= maxMintAmount, "max mint amount per session exceeded");
-        //铸币有总数限制
         require(supply <= maxSupply, "max NFT limit exceeded");
         require(msg.sender == recipient, "msg.sender not same with recipient");
         if (msg.sender != owner()) {
-            //如果开启了白名单
             if(onlyWhitelisted == true) {
-                // 白名单验证漏洞: 判断合约sender和nft接收地址是否相同
-                require(msg.sender == recipient, "msg.sender not same with recipient");
-                //判断是否为白名单中的一员  默克尔树实现
                 bytes32 result = keccak256(abi.encodePacked(recipient));
                 require(verify(proof, root, result), "user is not whitelisted");
             }
             uint256 ownerMintedCount = balanceOf(msg.sender);
-            //判断个人账户铸币后  持有nft总数是否超过限制
+
             require(ownerMintedCount + 1 <= nftPerAddressLimit, "max NFT per address exceeded");
-            // 判断个人账户余额是否足够 未确定 先注释
-//            require(msg.value >= minCost * 1, "insufficient funds");
+
+            require(msg.value >= minCost * 1, "insufficient funds");
         }
-        //如果设置了当前只能盲盒铸造 默认为盲盒url  盲盒这部分没想好怎么做
-        //        _setTokenURI(supply, uri);
-        //        if(!revealed) {
-        //            require(bytes(notRevealedUri).length > 0, "baseUrl not set");
-        //            _setTokenURI(newId, notRevealedUri);
-        //        }
+
         tokenCreateAddress[supply] = msg.sender;
         _mint(recipient, supply);
         _tokenIds.increment();
-        _tokenURIs[supply] = uri;
+        _setTokenURI(supply, uri);
         return supply;
     }
 
-    // 支付以太币   定价格   授权   交易的方法（版税）
-    // 1. tokenid 价格 出售状态（要出售）  代币拥有者可以修改    默认不出售
-    // 2. 出售，达到这个价格就可以买， 买完后，tokenid 价格设置成0， 不出售
-    //
+
     function safeTransfer(address from, address to, uint256 tokenId) public payable {
-        // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(msg.sender == proxyTransferContract, "wrong proxyTransferContract");
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         require(from != address(0), "from is the zero address");
         require(to != address(0), "to is the zero address");
-        require(isSale[tokenId] > 0, "token is not sell");
-        //update
-        require(msg.value >= isSale[tokenId], "token is not enough");
-        isSale[tokenId] = 0;
         safeTransferFrom(from, to, tokenId, "");
-        //版税相关 先注释
-        //给nft创建者10%
-        //royalties[tokenCreateAddress[tokenId]] += 10 * msg.value /100;
-        //给nft拥有者1
-        //royalties[ownerOf(tokenId)] += 84 * msg.value / 100;
+        address receiver;
+        uint256 royaltyAmount;
+        (receiver,royaltyAmount) = royaltyInfo(tokenId,msg.value);
+        royalties[receiver] += royaltyAmount;
+        (bool hs, ) = payable(from).call{value: msg.value * 98 / 100 - royaltyAmount}("");
+        require(hs);
+
     }
-    // 设置tokenid的状态 为 可以出售
-    function startSale(uint256 tokenId, uint256 price) public {
-        // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-        require(ownerOf(tokenId) == msg.sender, "not owner");
-        isSale[tokenId] = price;
-    }
-    // 设置tokenid的状态 为 不可出售
-    function endSale(uint256 tokenId) public {
-        // require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-        require(ownerOf(tokenId) == msg.sender, "not owner");
-        isSale[tokenId] = 0;
+
+    function withdraw() public payable {
+        (bool hs, ) = payable(msg.sender).call{value: royalties[msg.sender]}("");
+        require(hs);
     }
 }
